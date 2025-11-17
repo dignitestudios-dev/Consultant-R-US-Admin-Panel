@@ -1,0 +1,61 @@
+.gradient-color {
+    background: #0C1622;
+}
+ /* Optional: In your global CSS */
+/* input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+} */
+
+/* .button-bg {
+background: linear-gradient(90deg,rgba(179, 124, 38, 1) 0%, rgba(218, 180, 98, 1) 50%);
+} */
+
+.button-bg {
+background: #C19A4D;
+}
+
+/* .background-gradient {
+  background: linear-gradient(90deg, rgba(41, 39, 52, 1) 0%, rgba(0, 0, 0, 1) 50%);
+} */
+
+.background-gradient {
+  background: #0C1622; /* bg-white/10 */
+  backdrop-filter: blur(20px); /* backdrop-blur-xl */
+}
+
+/* .background-gradients {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(41, 39, 52, 1) 150%);
+} */
+
+/* styles.css or global.css */
+.background-gradients {
+  background: #0C1622; /* bg-white/10 */
+  backdrop-filter: blur(20px); /* backdrop-blur-xl */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* border-white/20 */
+  border-radius: 1rem; /* Optional: rounded corners similar to rounded-2xl */
+}
+
+
+
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1F2937; /* Dark track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #BE8B36; /* Accent color */
+  border-radius: 10px;
+  border: 2px solid #1F2937; /* Padding around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #dab462; /* Lighter on hover */
+}
