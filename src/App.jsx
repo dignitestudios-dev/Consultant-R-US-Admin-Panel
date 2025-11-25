@@ -51,7 +51,7 @@ function App() {
         <Route path="dashboard" element={<DummyHome />} />
         <Route path="users" element={<Users />} />
         <Route path="notifications" element={<Notifications />} />
-        <Route path="user-details" element={<UserDetails />} />
+        <Route path="user-details/:userId" element={<UserDetails />} />
         <Route path="posts" element={<Posts />} />
         <Route path="reports" element={<Reports />} />
         <Route path="company-verification" element={<CompanyVerification />} />
@@ -59,7 +59,7 @@ function App() {
         <Route path="verifications" element={<Verifications />} />
         <Route path="reviews" element={<ReviewsPage />} />
         <Route path="companies" element={<Companies />} />
-        <Route path="company-details" element={<CompanyDetails />} />
+        <Route path="company-details/:id" element={<CompanyDetails />} />
         <Route path="report-details/:id" element={<ReportDetails />} />
 
 

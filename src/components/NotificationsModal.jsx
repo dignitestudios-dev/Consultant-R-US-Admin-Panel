@@ -1,15 +1,54 @@
 import React, { useState } from "react";
+import axios from "../axios";  // Your axios instance
+import Cookies from "js-cookie";  // For authentication token
+import { SuccessToast, ErrorToast } from "../components/global/Toaster"; // Optional: Toasts for feedback
 
-const NotificationsModal = ({ isOpen, onClose }) => {
+
+
+const NotificationsModal = ({ isOpen, onClose, refetchNotifications }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false); // For handling loading state
+  
 
   if (!isOpen) return null;
 
-  const handleCreate = () => {
-    // Handle create logic here
-    console.log({ title, description });
-    onClose();
+  const handleCreate = async () => {
+    // Prepare the notification data
+    const notificationData = {
+      title,
+      description,
+      metadata: null,  // You can modify metadata if required
+    };
+
+    try {
+      setLoading(true);  // Set loading to true when the request is in progress
+
+      // Get the token from cookies
+      const token = Cookies.get("token");
+
+      // Make the POST request to create the notification
+      const response = await axios.post("/admin/create-push-notification", notificationData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        // On success, show success toast and close the modal
+        SuccessToast("Notification created successfully!");
+        refetchNotifications();  // Refetch the notifications list
+        onClose();
+      } else {
+        // On failure, show error toast
+        ErrorToast(response.data.message || "Failed to create notification");
+      }
+    } catch (error) {
+      console.error("Error creating notification", error);
+      ErrorToast("An error occurred while creating the notification.");
+    } finally {
+      setLoading(false);  // Set loading to false when the request is complete
+    }
   };
 
   return (
@@ -66,9 +105,12 @@ const NotificationsModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 rounded-lg button-bg text-white font-semibold hover:bg-[#b8860b] transition"
+              disabled={loading}  // Disable button while loading
+              className={`px-6 py-2 rounded-lg button-bg text-white font-semibold hover:bg-[#b8860b] transition ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Create
+              {loading ? "Creating..." : "Create"}
             </button>
           </div>
         </form>

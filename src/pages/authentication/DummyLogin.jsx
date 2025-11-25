@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { FiLoader } from "react-icons/fi";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Logo } from "../../assets/export";
-import axios from "../../axios";
+import axios from "../../axios";  // Ensure you're importing the axios instance
 import Cookies from "js-cookie";
 import { ErrorToast } from "../../components/global/Toaster";
 
@@ -23,12 +23,12 @@ const DummyLogin = () => {
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const handleForgotClick = () => navigate("/auth/forgot-password");
-  const handleLoginClick = () => navigate("/app/dashboard");
 
   const handleLogin = async () => {
     setEmailError("");
     setPasswordError("");
 
+    // Validation
     if (!email || !password) {
       ErrorToast("Please enter both email and password.");
       return;
@@ -47,11 +47,20 @@ const DummyLogin = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("/admin/login", { email, password });
+      // Sending login request
+      const response = await axios.post("/auth/admin-login", {
+        email,
+        password,
+        role: "admin",  // Ensure role is passed in the request body
+        fcmToken: "123",  // You might need to dynamically get the FCM token
+      });
 
       if (response.data.success) {
+        // Store token and user data in cookies
         Cookies.set("token", response.data.data.token);
-        Cookies.set("user", JSON.stringify(response.data.data.admin));
+        Cookies.set("user", JSON.stringify(response.data.data.user));
+
+        // Navigate to dashboard
         navigate("/app/dashboard");
       } else {
         ErrorToast(response.data.message || "An unknown error occurred.");
@@ -122,7 +131,7 @@ const DummyLogin = () => {
           </div>
 
           {/* Forgot Password */}
-          <div className="flex justify-end">
+          {/* <div className="flex justify-end">
             <button
               type="button"
               onClick={handleForgotClick}
@@ -130,12 +139,12 @@ const DummyLogin = () => {
             >
               Forgot Password?
             </button>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <button
             type="button"
-            onClick={handleLoginClick}
+            onClick={handleLogin}
             disabled={loading}
             className="w-full h-12 rounded-full button-bg text-white font-semibold flex items-center justify-center gap-2 transition disabled:opacity-70"
           >
