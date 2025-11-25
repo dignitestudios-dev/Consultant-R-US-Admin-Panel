@@ -111,12 +111,12 @@ const UserDetails = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-[32px] md:text-[36px] font-bold">User Details</h1>
 
-          <button
+          {/* <button
             onClick={() => navigate(-1)}
             className="text-gray-300 button-bg rounded-md p-4 hover:text-white transition"
           >
             ❮ Back
-          </button>
+          </button> */}
         </div>
       </div>
 

@@ -79,112 +79,115 @@ const Users = () => {
         </div>
       </div>
 
-     {/* USER CARDS */}
-{/* MODERN USER CARDS */}
-{/* 3 HORIZONTAL CARDS PER ROW */}
-<div className="
-  grid 
-  grid-cols-1 
-  sm:grid-cols-2 
-  lg:grid-cols-3    /* 👈 EXACTLY 3 PER ROW */
-  gap-8 
-  mt-10
-">
+      <div className="mb-4 background-gradients border border-gray-700 p-6 rounded-xl mt-6">
+        <div className="w-full rounded-xl overflow-x-auto space-y-4">
 
-  {isLoading
-    ? Array(pagination.itemsPerPage)
-        .fill(0)
-        .map((_, idx) => (
-          <div
-            key={idx}
-            className="h-[140px] background-gradients  rounded-xl border border-[#1A1D23] animate-pulse"
-          ></div>
-        ))
-    : users.map((user, idx) => (
-        <div
-          key={user._id}
-          className="
-            group
-            background-gradients 
-            border border-[#1A1D23]
-            rounded-xl
-            p-5
-            flex
-            items-center
-            gap-6
-            shadow-[0_0_20px_rgba(0,0,0,0.15)]
-            hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]
-            transition-all duration-300
-            h-[160px]    /* 👈 Keeps height consistent */
-          "
-        >
-          {/* Avatar */}
-          <img
-            src={user.signUpRecord.profilePicture}
-            className="
-              w-24 h-24 
-              rounded-xl object-cover 
-              shadow-sm
-              group-hover:scale-[1.03] 
-              transition
-              border-2 border-gray-700 
-            "
-          />
+          {/* Table Header */}
+          <div className="grid grid-cols-5 gap-4 text-left text-sm font-semibold text-gray-300 border-b border-gray-600 pb-4">
+            <div className="px-4">#</div>
+            <div>Profile</div>
+            <div>Email</div>
+            <div>Gender</div>
+            <div>Actions</div>
+          </div>
 
-          {/* Right Content */}
-          <div className="flex-1">
-            <h2 className="text-lg font-semibold text-white">
-              {user.signUpRecord.fullName}
-            </h2>
-
-            <p className="text-sm text-gray-400">{user.email}</p>
-
-            {/* <p className="text-[12px] text-gray-500 mt-1 uppercase tracking-wide">
-              {user.signUpRecord.gender}
-            </p> */}
-
-            <div className="flex items-center gap-3 mt-2">
-                    <span
-                      className={`
-                        px-3 py-1 text-xs font-semibold rounded-full
-                        ${
-                          user.status === "approved"
-                            ? "bg-green-900/40 text-green-400 border border-green-700"
-                            : "bg-yellow-900/40 text-yellow-400 border border-yellow-700"
-                        }
-                      `}
-                    >
-                      {user.status}
-                    </span>
+          {/* Table Rows */}
+          {isLoading
+            ? Array(pagination.itemsPerPage)
+                .fill(0)
+                .map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="grid grid-cols-5 gap-4 items-center text-sm text-gray-200 bg-gray-800 bg-opacity-40 p-4 rounded-lg"
+                  >
+                    <div className="w-8 h-6 bg-gray-700 animate-pulse rounded-lg"></div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gray-700 animate-pulse rounded-full"></div>
+                      <div className="w-24 h-6 bg-gray-700 animate-pulse rounded-lg"></div>
+                    </div>
+                    <div className="w-40 h-6 bg-gray-700 animate-pulse rounded-lg"></div>
+                    <div className="w-24 h-6 bg-gray-700 animate-pulse rounded-lg"></div>
+                    <div className="w-20 h-6 bg-gray-700 animate-pulse rounded-lg"></div>
+                  </div>
+                ))
+            : users.map((user, idx) => (
+                <div
+                  key={user._id}
+                  className="grid grid-cols-5 gap-4 items-center text-sm text-gray-200 border border-gray-700 bg-gray-800 bg-opacity-40 p-4 rounded-lg hover:bg-opacity-60 transition"
+                >
+                  <div className="font-medium text-gray-300">
+                    {(pagination.currentPage - 1) * pagination.itemsPerPage + idx + 1}
                   </div>
 
-            {/* Footer */}
-            <div className="flex justify-end items-center ">
-             
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={user.signUpRecord.profilePicture}
+                      alt={user.signUpRecord.fullName}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <span className="font-semibold">{user.signUpRecord.fullName}</span>
+                  </div>
 
-             <button
-                                   onClick={() => handleViewClick(company._id)}
-                                   className="
-                                     flex items-center gap-2
-                                     text-sm px-3 py-1.5
-                                     rounded-md
-                                     border border-[#2A2D33]
-                                     text-gray-300
-                                     hover:border-[#DAB462]
-                                     hover:text-[#DAB462]
-                                     transition
-                                   "
-                                 >
-                                   <FaEye className="text-[#DAB462]" />
-                                   View Details
-                                 </button>
-            </div>
-          </div>
+                  <div className="text-sm opacity-80 truncate font-semibold">
+                    {user.email}
+                  </div>
+
+                  <div className="text-sm capitalize">{user.signUpRecord.gender}</div>
+
+                  <div>
+                    <button
+                      onClick={() => handleViewClick(user._id)}
+                      className="text-white background-gradient p-2 flex items-center bg-opacity-80 hover:bg-gray-800 rounded-full transition"
+                    >
+                      <FaEye className="w-4 h-4 mr-2 text-[#DAB462]" /> View Details
+                    </button>
+                  </div>
+                </div>
+              ))}
         </div>
-      ))}
-</div>
 
+        {/* MODERN NETFLIX-STYLE PAGINATION */}
+        {/* <div className="relative mt-8 flex items-center justify-center">
 
+          <button
+            onClick={() => scrollPagination("left")}
+            className="p-2 absolute left-0 bg-[#0C111D] border border-gray-700 text-gray-300 rounded-full hover:bg-[#BE8B36] hover:text-white transition"
+          >
+            <FaChevronLeft className="w-4 h-4" />
+          </button>
+
+          <div
+            ref={paginationRef}
+            className="flex space-x-3 overflow-x-auto no-scrollbar px-12 py-2 scroll-smooth"
+            style={{ scrollBehavior: "smooth" }}
+          >
+            {Array.from(
+              { length: pagination.totalPages > 0 ? pagination.totalPages : 1 },
+              (_, i) => i + 1
+            ).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`px-4 py-2 rounded-xl border border-gray-700 whitespace-nowrap transition ${
+                  page === pagination.currentPage
+                    ? "bg-[#BE8B36] text-white"
+                    : "text-gray-300 hover:bg-gray-700"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => scrollPagination("right")}
+            className="p-2 absolute right-0 bg-[#0C111D] border border-gray-700 text-gray-300 rounded-full hover:bg-[#BE8B36] hover:text-white transition"
+          >
+            <FaChevronRight className="w-4 h-4" />
+          </button>
+
+        </div> */}
+      </div>
     </div>
   );
 };
