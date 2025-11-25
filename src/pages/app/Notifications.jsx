@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../axios"; // Your axios instance
-import { Trash2 } from "lucide-react";
+import { Clock, Trash2 } from "lucide-react";
 import NotificationsModal from "../../components/NotificationsModal";
 import { ErrorToast } from "../../components/global/Toaster"; // Optional: for error handling
 
@@ -91,28 +91,44 @@ const Notifications = () => {
           </div>
         ) : (
           notifications.map((notification) => (
-            <div
-              key={notification._id}
-              className="background-gradient border border-gray-700 p-6 rounded-xl hover:bg-opacity-80 transition cursor-pointer"
-            >
-              <div className="flex justify-between items-center">
-                <div className="text-xl font-semibold text-gray-200">
-                  {notification.title}
-                </div>
-                <div className="text-sm text-gray-400">
-                  {new Date(notification.createdAt).toLocaleString()}
-                </div>
-              </div>
-              <p className="mt-2 text-gray-300">{notification.description}</p>
-              <div className="flex justify-end">
-                <button
-                  className="text-red-500 hover:text-red-400 transition"
-                  onClick={() => alert(`Delete Notification ${notification._id}`)} // handle delete here
-                >
-                  <Trash2 />
-                </button>
-              </div>
-            </div>
+          <div
+  key={notification._id}
+  className="relative bg-gray-800/40 backdrop-blur-md border border-gray-700 
+             p-5 rounded-2xl hover:bg-gray-800/60 hover:border-gray-600 
+             transition-all duration-300 group"
+>
+  {/* Top Row */}
+  <div className="flex justify-between items-start">
+    <div>
+      <h2 className="text-[20px] font-semibold text-white leading-tight">
+        {notification.title}
+      </h2>
+      
+    </div>
+    <p className="text-sm text-gray-400 mt-1 flex items-center gap-1.5">
+  <Clock size={14} className="text-gray-500" />
+  {new Date(notification.createdAt).toLocaleString()}
+</p>
+
+    {/* Delete button */}
+    {/* <button
+      onClick={() => alert(`Delete Notification ${notification._id}`)}
+      className="opacity-70 hover:opacity-100 text-red-400 hover:text-red-300
+                 transition duration-200 p-2 rounded-lg hover:bg-red-400/10"
+    >
+      <Trash2 size={20} />
+    </button> */}
+  </div>
+
+  {/* Divider */}
+  <div className="border-b border-gray-700/60 my-4 group-hover:border-gray-600"></div>
+
+  {/* Description */}
+  <p className="text-gray-300 leading-relaxed">
+    {notification.description}
+  </p>
+</div>
+
           ))
         )}
       </section>

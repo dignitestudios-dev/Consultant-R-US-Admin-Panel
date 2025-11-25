@@ -29,21 +29,21 @@ export const sidebarData = [
     icon: <UserPlus />,  // UserPlus fits managing users better than User
     link: "/app/users",
   },
-  {
-    title: "Reports",
-    icon: <MessageSquareWarning />,  // Warning icon works well for reports
-    link: "/app/reports",
-  },
-   {
-    title: "Verifications",
-    icon: <ScanSearch />,  // Warning icon works well for reports
-    link: "/app/verifications",
-  },
-   {
-    title: "Reviews",
-    icon: <Star />,  // Warning icon works well for reports
-    link: "/app/reviews",
-  },
+  // {
+  //   title: "Reports",
+  //   icon: <MessageSquareWarning />,  // Warning icon works well for reports
+  //   link: "/app/reports",
+  // },
+  //  {
+  //   title: "Verifications",
+  //   icon: <ScanSearch />,  // Warning icon works well for reports
+  //   link: "/app/verifications",
+  // },
+  //  {
+  //   title: "Reviews",
+  //   icon: <Star />,  // Warning icon works well for reports
+  //   link: "/app/reviews",
+  // },
    {
     title: "Companies",
     icon: <Building2 />,  // Warning icon works well for reports
