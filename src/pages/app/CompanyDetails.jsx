@@ -96,10 +96,27 @@ const CompanyDetails = () => {
   return (
     <div className="p-6 min-h-screen pt-0 text-white">
       {/* Header */}
-      <div className="background-gradients p-6 rounded-xl border border-gray-700 mt-4 relative">
-        <div className="absolute top-0 left-0 h-1 w-full button-bg rounded-t-3xl" />
-        <h1 className="text-[32px] md:text-[36px] font-bold">Company Details</h1>
-      </div>
+    <div className="background-gradients p-6 rounded-xl border border-gray-700 mt-4 relative">
+  <div className="absolute top-0 left-0 h-1 w-full button-bg rounded-t-3xl flex justify-between" />
+  
+  {/* Heading and Actions on the same line */}
+  <div className="flex items-center justify-between">
+    <h1 className="text-[32px] md:text-[36px] font-bold">Company Details</h1>
+    
+    {/* Show Approve Button Only If Status is Not "approved" */}
+    {company.status !== "approved" && (
+      <button
+        onClick={openApproveModal}
+        className="px-8 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition flex items-center"
+      >
+        Approve
+      </button>
+    )}
+  </div>
+</div>
+
+
+     
 
       {/* Overview */}
       <div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6 flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -163,18 +180,7 @@ const CompanyDetails = () => {
         </p>
       </div>
 
-      {/* Actions */}
-      <div className="flex justify-end gap-6 mt-8">
-        {/* Show Approve Button Only If Status is Not "approved" */}
-        {company.status !== "approved" && (
-          <button
-            onClick={openApproveModal}
-            className="px-8 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition flex items-center gap-3"
-          >
-            Approve
-          </button>
-        )}
-      </div>
+      
 
       {/* Approve Confirmation Modal */}
       {isModalOpen && (
