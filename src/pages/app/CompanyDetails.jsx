@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import axios from "../../axios"; // <-- using your axios.js EXACTLY as exported
+import axios from "../../axios"; // 
 import Cookies from "js-cookie";  // Import js-cookie
 
 const CompanyDetails = () => {
@@ -165,12 +165,15 @@ const CompanyDetails = () => {
 
       {/* Actions */}
       <div className="flex justify-end gap-6 mt-8">
-        <button
-          onClick={openApproveModal}
-          className="px-8 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition flex items-center gap-3"
-        >
-          Approve
-        </button>
+        {/* Show Approve Button Only If Status is Not "approved" */}
+        {company.status !== "approved" && (
+          <button
+            onClick={openApproveModal}
+            className="px-8 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition flex items-center gap-3"
+          >
+            Approve
+          </button>
+        )}
       </div>
 
       {/* Approve Confirmation Modal */}
