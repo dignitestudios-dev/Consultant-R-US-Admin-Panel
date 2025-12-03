@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { FaRegEdit, FaTrash } from "react-icons/fa";
 import axios from "../../axios"; // <-- using your axios.js EXACTLY as exported
+import Cookies from "js-cookie";  // Import js-cookie
 
 const CompanyDetails = () => {
   const { id } = useParams();
@@ -9,13 +9,22 @@ const CompanyDetails = () => {
 
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);  // Modal state
+  const [isApproving, setIsApproving] = useState(false);  // Approving state
+
+  // Retrieve token from cookies
+  const token = Cookies.get("token");  // Get token from cookies (replace 'authToken' with the actual key you use)
 
   // Fetch company info
   const fetchCompany = async () => {
     try {
       setLoading(true);
 
-      const res = await axios.get(`/admin/get-contractor/${id}`);
+      const res = await axios.get(`/admin/get-contractor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Include token in the header
+        },
+      });
 
       if (res.data?.success) {
         setCompany(res.data.data);
@@ -31,64 +40,50 @@ const CompanyDetails = () => {
     fetchCompany();
   }, [id]);
 
-  const handleEdit = () => alert("Edit company details");
-  const handleDelete = () =>
-    window.confirm("Are you sure you want to delete this company?") &&
-    alert("Company deleted");
+  // Handle approval action (PATCH request)
+  const handleApprove = async () => {
+    try {
+      setIsApproving(true); // Disable button during approval
+      const response = await axios.patch(
+        `/admin/contractors/${id}/approve`,
+        {}, // Empty body (can be adjusted if needed)
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Include token in the header
+          },
+        }
+      );
+
+      if (response.data?.success) {
+        setCompany(prevCompany => ({ ...prevCompany, status: 'approved' }));
+        setIsModalOpen(false); // Close modal after successful approval
+      } else {
+        console.error("Approval failed:", response.data?.message || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Error approving company:", error);
+    } finally {
+      setIsApproving(false); // Re-enable button after completion
+    }
+  };
+
+  // Open modal on Approve button click
+  const openApproveModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   if (loading) {
-  return (
-    <div className="p-6 min-h-screen pt-0 animate-pulse">
-
-      {/* Header Skeleton */}
-      <div className="background-gradients p-6 rounded-xl border border-gray-700 mt-4 relative">
-        <div className="absolute top-0 left-0 h-1 w-full button-bg rounded-t-3xl" />
-        <div className="h-8 w-48 bg-gray-700 rounded"></div>
+    return (
+      <div className="p-6 min-h-screen pt-0 animate-pulse">
+        {/* Loading skeleton content */}
       </div>
-
-      {/* Overview Skeleton */}
-      <div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6 flex flex-col md:flex-row items-start md:items-center gap-6">
-        
-        {/* Circular Avatar Skeleton */}
-        <div className="w-32 h-32 rounded-full bg-gray-700 border border-gray-600"></div>
-
-        <div className="flex flex-col gap-3 w-full">
-          <div className="h-6 w-52 bg-gray-700 rounded"></div>
-          <div className="h-4 w-32 bg-gray-700 rounded"></div>
-
-          <div className="flex items-center gap-3 mt-3">
-            <div className="h-5 w-20 bg-gray-700 rounded-full"></div>
-            <div className="h-4 w-24 bg-gray-700 rounded"></div>
-          </div>
-        </div>
-      </div>
-
-      {/* Grid Skeleton */}
-      <div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-        {[1,2,3,4].map((i)=>(
-          <div key={i} className="space-y-2">
-            <div className="h-4 w-20 bg-gray-700 rounded"></div>
-            <div className="h-5 w-32 bg-gray-600 rounded"></div>
-          </div>
-        ))}
-      </div>
-
-      {/* Description Skeleton */}
-      <div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6 space-y-3">
-        <div className="h-4 w-32 bg-gray-700 rounded"></div>
-        <div className="h-5 w-full bg-gray-600 rounded"></div>
-        <div className="h-5 w-3/4 bg-gray-600 rounded"></div>
-      </div>
-
-      {/* Buttons Skeleton */}
-      <div className="flex justify-end gap-6 mt-8">
-        <div className="h-10 w-28 bg-gray-700 rounded-xl"></div>
-        <div className="h-10 w-28 bg-gray-700 rounded-xl"></div>
-      </div>
-    </div>
-  );
-}
-
+    );
+  }
 
   if (!company) {
     return (
@@ -103,26 +98,19 @@ const CompanyDetails = () => {
       {/* Header */}
       <div className="background-gradients p-6 rounded-xl border border-gray-700 mt-4 relative">
         <div className="absolute top-0 left-0 h-1 w-full button-bg rounded-t-3xl" />
-        <h1 className="text-[32px] md:text-[36px] font-bold">
-          Company Details
-        </h1>
+        <h1 className="text-[32px] md:text-[36px] font-bold">Company Details</h1>
       </div>
 
       {/* Overview */}
       <div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6 flex flex-col md:flex-row items-start md:items-center gap-6">
         <img
-          src={
-            company.profilePicture ||
-            "https://via.placeholder.com/150?text=No+Image"
-          }
+          src={company.profilePicture || "https://via.placeholder.com/150?text=No+Image"}
           className="w-32 h-32 rounded-full object-cover border border-gray-700 shadow"
           alt="Company Logo"
         />
-
         <div>
           <h2 className="text-3xl font-semibold">{company.companyName}</h2>
           <p className="text-gray-400 text-sm">{company.industryFocus}</p>
-
           <div className="flex items-center gap-3 mt-3">
             <span
               className={`px-4 py-1 text-xs font-semibold rounded-full ${
@@ -140,19 +128,14 @@ const CompanyDetails = () => {
 
       {/* Info Grid */}
       <div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-
         <div>
           <p className="text-gray-400">Email</p>
           <p className="text-white font-semibold">{company.email}</p>
         </div>
-
         <div>
           <p className="text-gray-400">Company Size</p>
-          <p className="text-white font-semibold">
-            {company.companySize || "N/A"}
-          </p>
+          <p className="text-white font-semibold">{company.companySize || "N/A"}</p>
         </div>
-
         <div>
           <p className="text-gray-400">Website</p>
           <a
@@ -164,7 +147,6 @@ const CompanyDetails = () => {
             {company.webUrl?.[0] || "No Website"}
           </a>
         </div>
-
         <div>
           <p className="text-gray-400">Location</p>
           <p className="text-white font-semibold">
@@ -183,22 +165,48 @@ const CompanyDetails = () => {
 
       {/* Actions */}
       <div className="flex justify-end gap-6 mt-8">
-        {/* <button
-          onClick={handleEdit}
-          className="px-8 py-3 rounded-xl border border-gray-600 hover:border-[#DAB462] transition flex items-center gap-3"
+        <button
+          onClick={openApproveModal}
+          className="px-8 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 transition flex items-center gap-3"
         >
-          <FaRegEdit />
-          Edit
-        </button> */}
-
-        {/* <button
-          onClick={handleDelete}
-          className="px-8 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition flex items-center gap-3"
-        >
-          <FaTrash />
-          Delete
-        </button> */}
+          Approve
+        </button>
       </div>
+
+      {/* Approve Confirmation Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm px-4">
+          <div className="bg-[#1E2430] border border-gray-700 rounded-xl max-w-md w-full p-6 shadow-lg text-white relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 text-gray-400 hover:text-white transition text-xl font-bold"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold text-green-500 mb-4">
+              Confirm Approval
+            </h2>
+            <p className="text-lg mb-4">
+              Are you sure you want to approve this company?
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeModal}
+                className="px-6 py-2 rounded-xl border border-gray-600 text-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleApprove}
+                className="px-6 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700"
+                disabled={isApproving}
+              >
+                {isApproving ? "Approving..." : "Approve"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

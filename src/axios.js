@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 export const baseUrl = "https://api.consultantsrus.co";
+
 // export const baseUrl = "https://155e-45-199-187-86.ngrok-free.app";
 
 async function getDeviceFingerprint() {
