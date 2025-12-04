@@ -145,7 +145,7 @@ const UserDetails = () => {
   <div className="ml-auto flex items-center gap-3">
 
     {/* Show Approve/Reject only if pending */}
-    {user.status === "pending" && (
+    {/* {user.status === "pending" && (
       <>
         <button
           onClick={() => setShowApproveModal(true)}
@@ -161,7 +161,7 @@ const UserDetails = () => {
           Reject
         </button>
       </>
-    )}
+    )} */}
 
     {/* Delete Button */}
     <button
