@@ -191,19 +191,28 @@ const CompanyDetails = () => {
       rel="noopener noreferrer"
       className="inline-block"
     >
-      <img
-        src={company.licence}
-        alt="Company License"
-        className="w-40 h-40 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition"
-      />
-      <p className="text-[#DAB462] text-sm mt-2 hover:underline">
+      {company.licence.toLowerCase().endsWith(".pdf") ? (
+        // PDF fallback preview
+        <div className="w-40 h-40 flex items-center justify-center bg-gray-800 rounded-lg border border-gray-700 hover:opacity-80 transition">
+          <span className="text-white font-semibold">PDF</span>
+        </div>
+      ) : (
+        // Image preview
+        <img
+          src={company.licence}
+          alt="Company License"
+          className="w-40 h-40 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition"
+        />
+      )}
+      {/* <p className="text-[#DAB462] text-sm mt-2 hover:underline text-center">
         View License Document
-      </p>
+      </p> */}
     </a>
   ) : (
     <p className="text-gray-500">No license uploaded.</p>
   )}
 </div>
+
 
       
 
