@@ -180,6 +180,31 @@ const CompanyDetails = () => {
         </p>
       </div>
 
+{/* LICENSE */}
+<div className="bg-[#0C111D] border border-gray-700 p-6 rounded-xl mt-6">
+  <p className="text-gray-400 mb-2">Company License</p>
+
+  {company.licence ? (
+    <a
+      href={company.licence}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block"
+    >
+      <img
+        src={company.licence}
+        alt="Company License"
+        className="w-40 h-40 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition"
+      />
+      <p className="text-[#DAB462] text-sm mt-2 hover:underline">
+        View License Document
+      </p>
+    </a>
+  ) : (
+    <p className="text-gray-500">No license uploaded.</p>
+  )}
+</div>
+
       
 
       {/* Approve Confirmation Modal */}
